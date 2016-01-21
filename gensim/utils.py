@@ -24,6 +24,7 @@ except ImportError:
     import pickle as _pickle
 
 import re
+import string
 import unicodedata
 import os
 import random
@@ -78,7 +79,7 @@ except ImportError:
 
 PAT_ALPHABETIC = re.compile('(((?![\d])\w)+)', re.UNICODE)
 RE_HTML_ENTITY = re.compile(r'&(#?)([xX]?)(\w{1,8});', re.UNICODE)
-
+PAT_ALPHABETIC_WITH_PUNCT = re.compile('(((?![\d])[\w{}])+)'.format(re.escape(string.punctuation)), re.UNICODE)
 
 
 def synchronous(tlockname):
@@ -161,7 +162,7 @@ def copytree_hardlink(source, dest):
         shutil.copy2 = copy2
 
 
-def tokenize(text, lowercase=False, deacc=False, errors="strict", to_lower=False, lower=False):
+def tokenize(text, lowercase=False, deacc=False, errors="strict", to_lower=False, lower=False, keep_punct=False):
     """
     Iteratively yield tokens as unicode strings, removing accent marks
     and optionally lowercasing the unidoce string by assigning True
@@ -182,8 +183,12 @@ def tokenize(text, lowercase=False, deacc=False, errors="strict", to_lower=False
         text = text.lower()
     if deacc:
         text = deaccent(text)
-    for match in PAT_ALPHABETIC.finditer(text):
-        yield match.group()
+    if keep_punct:
+        for match in PAT_ALPHABETIC_WITH_PUNCT.finditer(text):
+            yield match.group()
+    else:
+        for match in PAT_ALPHABETIC.finditer(text):
+            yield match.group()
 
 
 def simple_preprocess(doc, deacc=False, min_len=2, max_len=15):

@@ -105,6 +105,8 @@ stem = stem_text
 
 DEFAULT_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces,
                    strip_numeric, remove_stopwords, strip_short, stem_text]
+DEFAULT2_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces,
+                   strip_numeric, remove_stopwords, strip_short]
 
 
 def preprocess_string(s, filters=DEFAULT_FILTERS):
@@ -113,6 +115,15 @@ def preprocess_string(s, filters=DEFAULT_FILTERS):
         s = f(s)
     return s.split()
 
+def preprocess_strings_list(slist, filters=DEFAULT_FILTERS):
+    result = []
+    for s in slist:
+        s = utils.to_unicode(s)
+        for f in filters:
+            s = f(s)
+        if s:
+            result.append(s)
+    return result
 
 def preprocess_documents(docs):
     return [preprocess_string(d) for d in docs]
