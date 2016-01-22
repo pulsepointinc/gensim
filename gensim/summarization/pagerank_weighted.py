@@ -58,11 +58,14 @@ def pagerank_weighted_scipy(graph, damping=0.85):
 
 
 def pagerank_weighted(graph, damping=0.85):
-    if len(graph.nodes()) == 0: #empty graph
+    g_dim = len(graph.nodes())
+    if g_dim == 0: #empty graph
        return process_results(graph, [])
+    elif g_dim in [1,2]:
+       return process_results(graph, [1.] * g_dim)
     adjacency_matrix = build_adjacency_matrix(graph)
     probability_matrix = build_probability_matrix(graph)
-
+    # print "PRW :", len(graph.nodes())
     pagerank_matrix = damping * adjacency_matrix.todense() + (1 - damping) * probability_matrix
     # print (pagerank_matrix - pagerank_matrix.T).sum(), pagerank_matrix.shape, (pagerank_matrix == pagerank_matrix.T).all()
     vals, vecs = eigs(pagerank_matrix.T, k=1)  # TODO raise an error if matrix has complex eigenvectors?

@@ -192,13 +192,20 @@ def _get_combined_keywords(_keywords, split_text, ngram=None):
                     #    _keywords.pop(keyword)i
                     if ngram is None or ngram ==  len(combined_word):
                         result.add(" ".join(combined_word))
+                        combined_word = []
                         ii = j + 1
                     break    
                 if split_text[j].strip()[-1] in _punctuations:
                     if (ngram is None) or ngram == len(combined_word):
                         result.add(" ".join(combined_word)) # we should not combine separated keywords
-                        ii = j
+                        combined_word = []
+                        ii = j + 1
+                        
                     break
+            if combined_word and ((ngram is None) or ngram == len(combined_word)):
+               result.add(" ".join(combined_word))
+               combined_word = []
+               ii = len_text
     return list(result)
 
 
@@ -238,7 +245,8 @@ def keywords(text, ratio=0.2, words=None, split=False, scores=False, pos_filter=
     # Gets a dict of word -> lemma
     text = to_unicode(text)
     tokens = _clean_text_by_word(text, nltk_tag)
-    split_text = list(_tokenize_by_word(text))
+    split_text = list(_tokenize_by_word(text, keep_punct=True))
+    # print split_text
     # Creates the graph and adds the edges
     graph = _build_graph(_get_words_for_graph(tokens, pos_filter))
     split_text2 = _preprocess_strings(split_text, DEFAULT2_FILTERS)

@@ -49,6 +49,9 @@ def strip_punctuation(s):
     s = utils.to_unicode(s)
     return RE_PUNCT.sub(" ", s)
 
+def split_punctuation(s):
+    s = utils.to_unicode(s)
+    return RE_PUNCT.sub(r" \1 ", s)
 
 # unicode.translate cannot delete characters like str can
 strip_punctuation2 = strip_punctuation
@@ -105,8 +108,8 @@ stem = stem_text
 
 DEFAULT_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces,
                    strip_numeric, remove_stopwords, strip_short, stem_text]
-DEFAULT2_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces,
-                   strip_numeric, remove_stopwords, strip_short]
+DEFAULT2_FILTERS = [lambda x: x.lower(), strip_tags, split_punctuation, strip_multiple_whitespaces,
+                   strip_numeric, remove_stopwords]
 
 
 def preprocess_string(s, filters=DEFAULT_FILTERS):
@@ -122,7 +125,9 @@ def preprocess_strings_list(slist, filters=DEFAULT_FILTERS):
         for f in filters:
             s = f(s)
         if s:
-            result.append(s)
+            s_ = s.split()
+            result.extend(s_)
+    # print repr(result)
     return result
 
 def preprocess_documents(docs):
