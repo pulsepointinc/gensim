@@ -106,9 +106,13 @@ def stem_text(text):
     return ' '.join(p.stem(word) for word in text.split())
 stem = stem_text
 
-DEFAULT_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces,
-                   strip_numeric, remove_stopwords, strip_short, stem_text]
-DEFAULT2_FILTERS = [lambda x: x.lower(), strip_tags, split_punctuation, strip_multiple_whitespaces,
+# DEFAULT_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces,
+#                    strip_numeric, remove_stopwords, strip_short, stem_text]
+# DEFAULT2_FILTERS = [lambda x: x.lower(), strip_tags, split_punctuation, strip_multiple_whitespaces,
+#                    strip_numeric, remove_stopwords]
+DEFAULT_FILTERS = [strip_tags, strip_punctuation, strip_multiple_whitespaces,
+                   strip_numeric, remove_stopwords]
+DEFAULT2_FILTERS = [strip_tags, split_punctuation, strip_multiple_whitespaces,
                    strip_numeric, remove_stopwords]
 
 

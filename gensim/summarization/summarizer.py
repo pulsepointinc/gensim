@@ -187,7 +187,7 @@ def summarize(text, ratio=0.2, word_count=None, split=False):
     """
     # Gets a list of processed sentences.
     sentences = _clean_text_by_sentences(text)
-
+    
     # If no sentence could be identified, the function ends.
     if len(sentences) == 0:
         logger.warning("Input text is empty.")

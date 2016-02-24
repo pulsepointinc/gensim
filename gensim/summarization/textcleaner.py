@@ -77,7 +77,7 @@ def merge_syntactic_units(original_units, filtered_units, tags=None):
         if filtered_units[i] == '':
             continue
 
-        text = original_units[i]
+        text = original_units[i]  # .lower()
         token = filtered_units[i]
         tag = tags[i][1] if tags else None
         sentence = SyntacticUnit(text, token, tag)
@@ -105,15 +105,18 @@ def clean_text_by_word(text, nltk=False):
     """ Tokenizes a given text into words, applying filters and lemmatizing them.
     Returns a dict of word -> syntacticUnit. """
     from time import time
+    # print "TR:", text
     text_without_acronyms = replace_with_separator(text, "", [AB_ACRONYM_LETTERS])
-    original_words = list(tokenize(text_without_acronyms, to_lower=True, deacc=True))
+    original_words = list(tokenize(text_without_acronyms, to_lower=False, deacc=True))
     filtered_words = [join_words(word_list, "") for word_list in preprocess_documents(original_words)]
     if HAS_PATTERN and (not nltk):
         tags = tag(join_words(original_words))  # tag needs the context of the words in the text
     elif nltk and HAS_NLTK:
         tags = nltk_tag(join_words(original_words))
+        print "TR:", repr(tags)
     else:
         tags = None
+    print 'TR:', repr(filtered_words) 
     units = merge_syntactic_units(original_words, filtered_words, tags)
     return dict((unit.text, unit) for unit in units)
 

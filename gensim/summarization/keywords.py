@@ -64,9 +64,12 @@ def _set_graph_edge(graph, tokens, word_a, word_b):
         lemma_a = tokens[word_a].token
         lemma_b = tokens[word_b].token
         edge = (lemma_a, lemma_b)
-        if graph.has_node(lemma_a) and graph.has_node(lemma_b) and not graph.has_edge(edge):
-            # print "Added!!!",
-            graph.add_edge(edge)
+        if graph.has_node(lemma_a) and graph.has_node(lemma_b):
+            if not graph.has_edge(edge):
+                graph.add_edge(edge)
+            else:
+                wt = graph.edge_weight(edge)
+                graph.set_edge_properties(edge, weight=wt+1)
     # print ''
 
 
