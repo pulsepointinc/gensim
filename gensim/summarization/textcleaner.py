@@ -113,10 +113,10 @@ def clean_text_by_word(text, nltk=False):
         tags = tag(join_words(original_words))  # tag needs the context of the words in the text
     elif nltk and HAS_NLTK:
         tags = nltk_tag(join_words(original_words))
-        print "TR:", repr(tags)
+        # print "TR:", repr(tags)
     else:
         tags = None
-    print 'TR:', repr(filtered_words) 
+    # print 'TR:', repr(filtered_words) 
     units = merge_syntactic_units(original_words, filtered_words, tags)
     return dict((unit.text, unit) for unit in units)
 
